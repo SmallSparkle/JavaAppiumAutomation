@@ -1,2 +1,2 @@
 # JavaAppiumAutomation
-test project
+учебный проект по автоматизации тестирования
