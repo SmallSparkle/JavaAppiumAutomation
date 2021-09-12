@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 
+import static org.junit.Assert.*;
+
 public class FirstTest {
 
     private AppiumDriver driver;
@@ -123,11 +125,22 @@ public class FirstTest {
         );
 
         String article_title = title_element.getAttribute("text");
-        Assert.assertEquals(
+        assertEquals(
                 "We see unexpected title",
                 "Java (programming language)",
                 article_title
         );
+    }
+
+    @Test
+    public void testSearchFieldHasText() {
+
+        assertElementHasText(
+                By.className("android.widget.TextView"),
+                "Search Wikipedia",
+                "Cannot find Search element"
+        );
+
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
@@ -158,9 +171,10 @@ public class FirstTest {
         return element;
     }
 
-    private boolean waitForElementNotPresent(By by, String error_massage, long timeoutInSeconds) {
+    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_massage + "\n");
+        wait.withMessage(error_message + "\n");
+
 
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
@@ -172,5 +186,15 @@ public class FirstTest {
         element.clear();
 
         return element;
+    }
+
+    private void assertElementHasText(By by, String expected_text, String error_message) {
+        WebElement element = waitForElementPresent(by, error_message, 5);
+        String actual_text = element.getAttribute("text");
+        assertEquals(
+                expected_text,
+                actual_text
+        );
+
     }
 }
