@@ -11,6 +11,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -77,9 +81,13 @@ public class FirstTest {
                 5
         );
 
+        assertElementsIsPresent(
+                By.id("org.wikipedia:id/page_list_item_container")
+        );
+
         waitForElementAndClear(
                 By.id("org.wikipedia:id/search_src_text"),
-                "Cannot find search text field",
+                "Cannot find text element",
                 5
         );
 
@@ -90,9 +98,13 @@ public class FirstTest {
         );
 
         waitForElementNotPresent(
-                By.id("org.wikipedia:id/search_close_btn"),
+                By.xpath("//android.widget.ImageView[@content-desc=\"Clear query\"]"),
                 "X is still present on the page",
-                5
+                10
+        );
+
+        assertElementsNotPresent(
+                By.id("org.wikipedia:id/page_list_item_container")
         );
     }
 
@@ -152,6 +164,11 @@ public class FirstTest {
         );
     }
 
+    private void waitForElementsPresent(By by, String error_message, long timeoutInSeconds) {
+        WebElement[] elements = new WebElement[]{waitForElementPresent(by, error_message, timeoutInSeconds)};
+
+    }
+
     private WebElement waitForElementPresent(By by, String error_message) {
 
         return waitForElementPresent(by, error_message, 5);
@@ -175,7 +192,6 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
 
-
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
@@ -195,6 +211,16 @@ public class FirstTest {
                 expected_text,
                 actual_text
         );
+    }
 
+    private void assertElementsIsPresent(By by) {
+        int array_size = driver.findElements(by).size();
+        Assert.assertTrue(array_size > 0);
+    }
+
+    private void assertElementsNotPresent(By by) {
+        int array_size = driver.findElements(by).size();
+        Assert.assertTrue(array_size == 0);
     }
 }
+
