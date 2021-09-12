@@ -68,9 +68,22 @@ public class FirstTest {
                 5
         );
 
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot Fins search input",
+                5
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find search text field",
+                5
+        );
+
         waitForElementAndClick(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "Cannot Fins 'Search Wikipedia' input",
+                By.xpath("//android.widget.ImageView[@content-desc=\"Clear query\"]"),
+                "Cannot find X element",
                 5
         );
 
@@ -120,6 +133,7 @@ public class FirstTest {
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
+
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
         );
@@ -133,20 +147,30 @@ public class FirstTest {
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
+
         return element;
     }
 
     private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, 5);
         element.sendKeys(value);
+
         return element;
     }
 
     private boolean waitForElementNotPresent(By by, String error_massage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_massage + "\n");
+
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
+    }
+
+    private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.clear();
+
+        return element;
     }
 }
