@@ -38,21 +38,21 @@ public class FirstTest {
     @Test
     public void firstTest() {
 
-        waitForElementByXpathAndClick(
-                "//*[contains(@text, 'Search Wikipedia')]",
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot Fins search input",
                 5
         );
 
         waitForElementAndSendKeys(
-                "//*[contains(@text, 'Search…')]",
+                By.xpath("//*[contains(@text, 'Search…')]"),
                 "Java",
                 "Cannot Fins search input",
                 5
         );
 
-        waitForElementPresentByXpath(
-                "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']",
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
                 "Текст Object-oriented programming language не найден в поисковой выдаче",
                 15
         );
@@ -61,66 +61,53 @@ public class FirstTest {
     @Test
     public void testCancelSearch() {
 
-        waitForElementByIdAndClick(
-                "org.wikipedia:id/search_container",
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
                 "Cannot Fins 'Search Wikipedia' input",
                 5
         );
 
-        waitForElementByIdAndClick(
-                "org.wikipedia:id/search_close_btn",
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
                 "Cannot Fins 'Search Wikipedia' input",
                 5
         );
 
         waitForElementNotPresent(
-                "org.wikipedia:id/search_close_btn",
+                By.id("org.wikipedia:id/search_close_btn"),
                 "X is still present on the page",
                 5
         );
     }
 
-    private WebElement waitForElementPresentByXpath(String xpath, String error_message, long timeoutInSeconds) {
+    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
-        By by = By.xpath(xpath);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
     }
 
-    private WebElement waitForElementPresentByXpath(String xpath, String error_message) {
+    private WebElement waitForElementPresent(By by, String error_message) {
 
-        return waitForElementPresentByXpath(xpath, error_message, 5);
+        return waitForElementPresent(by, error_message, 5);
     }
 
-    private WebElement waitForElementByXpathAndClick(String xpath, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresentByXpath(xpath, error_message, timeoutInSeconds);
+    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
         return element;
     }
 
-    private WebElement waitForElementByIdAndClick(String id, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresentById(id, error_message, timeoutInSeconds);
-        element.click();
-        return element;
-    }
-
-    private WebElement waitForElementAndSendKeys(String xpath, String value, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresentByXpath(xpath, error_message, 5);
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, 5);
         element.sendKeys(value);
         return element;
     }
 
-    private WebElement waitForElementPresentById(String id, String error_message, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
-        By by = By.id(id);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
-    }
-
-    private boolean waitForElementNotPresent(String id, String error_massage, long timeoutInSeconds) {
+    private boolean waitForElementNotPresent(By by, String error_massage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_massage + "\n");
-        By by = By.id(id);
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
