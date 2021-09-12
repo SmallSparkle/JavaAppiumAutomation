@@ -164,11 +164,6 @@ public class FirstTest {
         );
     }
 
-    private void waitForElementsPresent(By by, String error_message, long timeoutInSeconds) {
-        WebElement[] elements = new WebElement[]{waitForElementPresent(by, error_message, timeoutInSeconds)};
-
-    }
-
     private WebElement waitForElementPresent(By by, String error_message) {
 
         return waitForElementPresent(by, error_message, 5);
