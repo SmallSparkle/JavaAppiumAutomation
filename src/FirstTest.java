@@ -13,10 +13,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -168,14 +164,14 @@ public class FirstTest {
 
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
+                "Appium",
                 "Cannot Fins search input",
                 5
         );
 
         waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
-                "Cannot Fins search input",
+                By.xpath("//*[@class='android.widget.TextView'][@text='Search Wikipedia']"),
+                "Cannot find 'Appium' search input",
                 5
         );
 
@@ -185,20 +181,38 @@ public class FirstTest {
                 15
         );
 
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
+        swipeUpToFindElement(
+            By.xpath("//*[@text='View page in browser']"),
+                "Cannot find the end of the article",
+                20
+        );
 
+    }
+
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes) {
+        int already_swiped = 0;
+        while (driver.findElements(by).size() == 0) {
+            if(already_swiped > max_swipes) {
+                waitForElementPresent(by,
+                        "Cannot find element by swiping up. \n" + error_message,
+                        0);
+                return;
+            }
+            swipeUpQuick();
+            ++ already_swiped;
+        }
+    }
+
+    protected void swipeUpQuick() {
+        swipeUp(200);
     }
 
     protected void swipeUp(int timeOfSwipe) {
         TouchAction action = new TouchAction(driver);
         Dimension size = driver.manage().window().getSize();
-        int x = size.width/2;
-        int start_y = (int) (size.width*0.8);
-        int end_y = (int) (size.width*0.2);
+        int x = size.width / 2;
+        int start_y = (int) (size.width * 0.8);
+        int end_y = (int) (size.width * 0.2);
 
         action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
     }
