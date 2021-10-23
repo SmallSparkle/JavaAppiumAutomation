@@ -1,4 +1,5 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
@@ -224,7 +225,7 @@ public class FirstTest {
         );
 
         waitForElementAndClick(
-                By.xpath("//*[@text='Add to reading list']"),
+                By.xpath("//android.widget.LinearLayout[3]"),
                 "Cannot find option to add article to reading list",
                 5
         );
@@ -274,12 +275,12 @@ public class FirstTest {
         );
 
         swipeElementToLeft(
-                By.xpath("//*[@text='Lear ning programming']"),
+                By.xpath("//*[@text='Java (programming language)']"),
                 "Cannot find saved article"
         );
 
         waitForElementNotPresent(
-                By.xpath("//*[@text='Learning programming']"),
+                By.xpath("//*[@text='Java (programming language)']"),
                 "Cannot delete saved article",
                 5
         );
@@ -289,17 +290,17 @@ public class FirstTest {
         WebElement element = waitForElementPresent(
                 by,
                 error_message,
-                300);
+                10);
         int left_x = element.getLocation().getX();
-        int rigt_x = left_x + element.getSize().getWidth();
+        int right_x = left_x + element.getSize().getWidth();
         int upper_y = element.getLocation().getY();
         int lower_y = upper_y + element.getSize().getHeight();
         int middle_y = (upper_y + lower_y) / 2;
 
         TouchAction action = new TouchAction(driver);
         action
-                .press(rigt_x, middle_y)
-                .waitAction(150)
+                .press(right_x, middle_y)
+                .waitAction(300)
                 .moveTo(left_x, middle_y)
                 .release()
                 .perform();
@@ -361,7 +362,9 @@ public class FirstTest {
 
     private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, 5);
-        element.sendKeys(value);
+//        element.sendKeys(value);
+        MobileElement elMobile = (MobileElement) element;
+        elMobile.setValue(value);
 
         return element;
     }
